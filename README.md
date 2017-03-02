@@ -2,3 +2,10 @@ In February/March 2017, I traveled around SE Asia. While traveling, I kept a mai
 touch with my close friends back home and practice my writing.
 
 This repo contains adhoc utilities I used for managing this mailing list.
+
+Both tools require installing docopt.
+
+##### TODO
+- write org_to_md
+- write send_old_emails
+- better README
