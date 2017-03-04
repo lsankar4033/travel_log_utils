@@ -12,6 +12,7 @@ from itertools import islice, takewhile
 
 import re
 
+# TODO Fix issue with multiple links on a single line
 def org_line_to_md_line(line):
     def header_replace(matchobj):
         subheader_depth = len(matchobj.group(0))
@@ -23,7 +24,16 @@ def org_line_to_md_line(line):
         href = matchobj.group(1)
         link_name = matchobj.group(2)
         return "[{}]({})".format(link_name, href)
-    return re.sub(r"\[\[(.+)\]\[(.+)\]\]", link_replace, line)
+    line = re.sub(r"\[\[(.+)\]\[(.+)\]\]", link_replace, line)
+
+    # Remove extra newlines
+    if line is "\n":
+        line = "\n\n"
+    elif line[-1] is '\n':
+        line = line[:-1] + " "
+
+    return line
+
 
 def build_markdown_str(org_file):
     org_lines = []
