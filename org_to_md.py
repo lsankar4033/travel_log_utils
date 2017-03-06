@@ -12,9 +12,6 @@ from itertools import islice, takewhile
 
 import re
 
-# TODO Fix issue with multiple links on a single line
-# I'm pretty sure this just requires excluding '[' and ']' from the regex used to replace links, but I should
-# verify this when I have internet...
 def _org_line_to_md_line(line):
     def header_replace(matchobj):
         subheader_depth = len(matchobj.group(0))
@@ -26,7 +23,7 @@ def _org_line_to_md_line(line):
         href = matchobj.group(1)
         link_name = matchobj.group(2)
         return "[{}]({})".format(link_name, href)
-    line = re.sub(r"\[\[(.+)\]\[(.+)\]\]", link_replace, line)
+    line = re.sub(r"\[\[([^\[\]]+)\]\[([^\[\]]+)\]\]", link_replace, line)
 
     return line
 
@@ -58,14 +55,14 @@ def _remove_extra_newlines(lines):
         elif _is_special_line(line):
             new_lines.append(line)
 
-        elif _is_header_line(line):
-            new_lines.append(line)
-
         # Collapse passages, but keep honoring bullet point lists
         else:
             next_line = lines[i+1]
 
             if _is_bullet_point_line(line) or _is_bullet_point_line(next_line):
+                new_lines.append(line)
+
+            elif _is_header_line(line) or _is_header_line(next_line):
                 new_lines.append(line)
 
             elif _is_newline_line(line) or _is_newline_line(next_line):
