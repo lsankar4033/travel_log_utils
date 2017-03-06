@@ -13,6 +13,8 @@ from itertools import islice, takewhile
 import re
 
 # TODO Fix issue with multiple links on a single line
+# I'm pretty sure this just requires excluding '[' and ']' from the regex used to replace links, but I should
+# verify this when I have internet...
 def _org_line_to_md_line(line):
     def header_replace(matchobj):
         subheader_depth = len(matchobj.group(0))
