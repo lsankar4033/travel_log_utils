@@ -6,4 +6,6 @@ This repo contains adhoc utilities I used for managing this mailing list.
 Both tools require installing docopt.
 
 ##### TODO
+- figure out how to send modified e-mails for batch_send
+  - might just be too difficult to warrant writing this tool...
 - better README
