@@ -6,5 +6,4 @@ This repo contains adhoc utilities I used for managing this mailing list.
 Both tools require installing docopt.
 
 ##### TODO
-- write send_old_emails
 - better README
