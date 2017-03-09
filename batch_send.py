@@ -7,12 +7,10 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 
-# TODO change this to read/write once I'm actually testing sending
-SCOPES = 'https://www.googleapis.com/auth/gmail.readonly'
+SCOPES = "https://www.googleapis.com/auth/gmail.modify"
 
-# TODO make it possible to pass this in via CLI
-CLIENT_SECRET_FILE = 'batch_send_secret.json'
-APPLICATION_NAME = 'batch_send'
+CLIENT_SECRET_FILE = "batch_send_secret.json"
+APPLICATION_NAME = "batch_send"
 
 # TODO make it possible to pass this in via CLI
 QUERY_STR = "is:sent subject:('[Lakshman's travels]')"
@@ -51,15 +49,29 @@ def get_message_ids(credentials, query_str):
 
     # Find all unique threads
     thread_ids = set([m["threadId"] for m in messages])
+    print("Found {} threads".format(len(thread_ids)))
 
     # Retrieve the first message in each thread
     first_message_ids = []
     for thread_id in thread_ids:
-        thread_msgs = service.users().threads().get(id=thread_id, userId="me", format="minimal").execute()
-        first_message_ids.append(thread_msgs["messages"][0]["id"])
+        result = service.users().threads().get(id=thread_id, userId="me", format="minimal").execute()
+        thread_msgs = result["messages"]
+        first_message_ids.append(thread_msgs[0]["id"])
 
     return first_message_ids
 
+# TODO turn this into general send message once I've
+# TODO(maybe) pass in gmail service rather than credentials to increase code re-use and avoid unnecessary
+# re-initialization
+def test_send(credentials, msg_id):
+    http = credentials.authorize(httplib2.Http())
+    service = discovery.build("gmail", "v1", http=http)
+
+    result = service.users().messages().get(id=msg_id, userId="me", format="raw").execute()
+    print(result.keys())
+
 if __name__ == "__main__":
     credentials = get_credentials()
-    message_ids = get_message_ids(credentials, QUERY_STR)
+    #message_ids = get_message_ids(credentials, QUERY_STR)
+
+    test_send(credentials, "159fe829d8725bcb")
