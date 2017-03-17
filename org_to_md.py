@@ -27,8 +27,13 @@ def _org_line_to_md_line(line):
 
     return line
 
+special_line_headings = ["Cities visited: ",
+                         "Dates: ",
+                         "Photos: ",
+                         "Till next time, "]
+
 def _is_special_line(line):
-    return line.startswith("Cities visited: ") or line.startswith("Dates: ")
+    return any([line.startswith(h) for h in special_line_headings])
 
 def _is_header_line(line):
     return line.startswith("#")
